@@ -3,6 +3,8 @@
 
 # Author: Sebastián J. Seba
 
+from __future__ import print_function
+
 import itertools
 
 
@@ -40,11 +42,7 @@ class DeadLock(object):
 
     def get_secure_sequences(self):
         permutaciones = list(itertools.permutations(range(self._proc_count)))
-        secuencias = []
-
-        for p in permutaciones:
-            if self.is_secure(p):
-                secuencias.append(p)
+        secuencias = [per for per in permutaciones if self.is_secure(per)]
 
         return secuencias
 
@@ -99,31 +97,30 @@ class DeadLock(object):
     def _less_equal(self, iterable1, iterable2):
         res = [i for i, j in zip(iterable1, iterable2) if i > j]
 
-        if res == []:
+        if res:
             return True
         else:
             return False
 
-    def get_necesidades(self):
+    @property
+    def necesidades(self):
         return self._necesidades
 
-    def get_asignados(self):
+    @property
+    def asignados(self):
         return self._asignados
 
-    def get_maximos(self):
+    @property
+    def maximos(self):
         return self._maximos
 
-    def get_disponible(self):
+    @property
+    def disponible(self):
         return self._disponible
 
-    def get_proc_count(self):
+    @property
+    def proc_count(self):
         return self._proc_count
-
-    necesidades = property(get_necesidades)
-    asignados = property(get_asignados)
-    maximos = property(get_maximos)
-    disponible = property(get_disponible)
-    proc_count = property(get_proc_count)
 
 if __name__ == '__main__':
     deadlock = DeadLock([[2, 1, 1, 1], [1, 0, 0, 1], [1, 0, 3, 1],
@@ -131,7 +128,7 @@ if __name__ == '__main__':
                         [2, 1, 3, 3], [3, 1, 3, 3], [4, 2, 1, 2],
                         [3, 3, 2, 5]], [1, 2, 3, 2])
 
-    print deadlock.assign_and_test(3, [1, 0, 0, 2])
-    print deadlock.assign_and_test(2, [1, 1, 0, 1])
-    print deadlock.assign_and_test(1, [1, 1, 3, 1])
-    print deadlock.assign_and_test(0, [3, 2, 0, 0])
+    print(deadlock.assign_and_test(3, [1, 0, 0, 2]))
+    print(deadlock.assign_and_test(2, [1, 1, 0, 1]))
+    print(deadlock.assign_and_test(1, [1, 1, 3, 1]))
+    print(deadlock.assign_and_test(0, [3, 2, 0, 0]))
